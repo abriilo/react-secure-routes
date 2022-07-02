@@ -8,7 +8,7 @@
 //-------------------------------------------------------------------
 
 // rendering route childrens using outlet
-// here: you can add navigations like (topbar, bottombar, sidebars ...etc) for public pages
+// here: you can add navigations like (topbar, bottombar, sidebars ...etc) for secure pages (private pages)
 
 import * as React from 'react';
 import AppBar from '@mui/material/AppBar';
@@ -18,31 +18,24 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
-import { Outlet } from "react-router-dom";
-import { setCookie } from "../../utils/Cookies";
-import { setLocalStorage } from "../../utils/Storage";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, Outlet } from "react-router-dom";
+import { deleteCookie } from "../../utils/Cookies";
 
-const PublicLayout = () => {
-    let navigate = useNavigate();
-    let location = useLocation();
+const PrivateLayout = () => {
+  let navigate = useNavigate();
 
-    const handleLogin = () =>{
+  const handleLogout = async (e) => {
+    e.preventDefault();
 
-        setLocalStorage("access", `here_your_access_token`);
-        setCookie("refresh", `here_your_refresh_key`, 7);
-
-        setTimeout(() => {
- 
-        let from = location.state?.from?.pathname || "/dashboard";
-        navigate(from, { replace: true });
-
-        }, 500);
-    }
+    window.localStorage.removeItem("access");
+    setTimeout(() => {
+      navigate("/", {replace:true});
+    }, 300);
+  };
 
   return (
-     <>
-     <Box sx={{ flexGrow: 1 }}>
+    <>
+    <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar>
           <IconButton
@@ -55,20 +48,15 @@ const PublicLayout = () => {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Home
+            Dashboard
           </Typography>
-          <Button color="inherit" onClick={handleLogin}>Login</Button>
+          <Button color="inherit" onClick={handleLogout}>Logout</Button>
         </Toolbar>
       </AppBar>
     </Box>
-     <Outlet/>
-     </>
+     <Outlet/> 
+    </>
   );
-}
+};
 
-
-export default PublicLayout;
-
-
-
-
+export default PrivateLayout;
