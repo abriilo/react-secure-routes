@@ -1,14 +1,12 @@
-import React from 'react';
+import React from "react";
+import routes from "./routes/routes";
+import { useRoutes } from "react-router-dom";
 
+const App = () => {
+  
+  let elements = useRoutes(routes);
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <h1>React App</h1>
-      </header>
-    </div>
-  );
-}
+  return <>{elements}</>;
+};
 
 export default App;
